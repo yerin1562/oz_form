@@ -81,7 +81,7 @@ class Question(db.Model):
         }
 
 
-class Options(db.Model):
+class Detail_questions(db.Model):
     __tablename__ = "detail_questions"
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
