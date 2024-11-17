@@ -1,4 +1,4 @@
-# 테이블 및 구조 설정 !
+# 테이블 및 구조 설정 
 
 from datetime import datetime, timezone
 from enum import Enum
@@ -81,7 +81,7 @@ class Question(db.Model):
         }
 
 
-class Options(db.Model):
+class DetailQuestion(db.Model):
     __tablename__ = "detail_questions"
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
