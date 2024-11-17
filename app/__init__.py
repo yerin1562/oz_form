@@ -18,6 +18,14 @@ def create_app():
     application.config.from_object("config.Config")
     application.secret_key = "oz_form_secret"
 
+        # application.config 
+    application.config['API_TITLE'] = 'oz_form'
+    application.config['API_VERSION'] = '1.0'
+    application.config['OPENAPI_VERSION'] = '3.1.3'
+    application.config['OPENAPI_URL_PREFIX'] = '/'
+    application.config['OPENAPI_SWAGGER_UI_PATH'] = '/swagger-ui'
+    application.config['OPENAPI_SWQGGER_UI_URL'] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
+
     db.init_app(application)
     api.init_app(application)
 
