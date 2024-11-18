@@ -30,7 +30,7 @@ class User(db.Model):
     name = db.Column(db.String(10), nullable=False)
     age = db.Column(db.Enum(AgeStatus), nullable=False)
     gender = db.Column(db.Enum(GenderStatus), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    mbti = db.Column(db.String(4), nullable=False)
 
     def to_dict(self):
         return {
