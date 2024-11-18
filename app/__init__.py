@@ -6,6 +6,7 @@ from config import api, db
 from flask import Flask
 from flask.cli import with_appcontext
 from flask_migrate import Migrate
+from app.routes import user_bp
 
 import app.models
 
@@ -13,25 +14,30 @@ migrate = Migrate()
 
 
 def create_app():
-    application = Flask(__name__)
+    app = Flask(__name__)
 
-    application.config.from_object("config.Config")
-    application.secret_key = "oz_form_secret"
+    app.config.from_object("config.Config")
+    app.secret_key = "oz_form_secret"
 
-        # application.config 
-    application.config['API_TITLE'] = 'oz_form'
-    application.config['API_VERSION'] = '1.0'
-    application.config['OPENAPI_VERSION'] = '3.1.3'
-    application.config['OPENAPI_URL_PREFIX'] = '/'
-    application.config['OPENAPI_SWAGGER_UI_PATH'] = '/swagger-ui'
-    application.config['OPENAPI_SWQGGER_UI_URL'] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
+        # app.config 
+    app.config['WTF_CSRF_ENABLED'] = False
 
-    db.init_app(application)
-    api.init_app(application)
+    app.config['API_TITLE'] = 'oz_form'
+    app.config['API_VERSION'] = '1.0'
+    app.config['OPENAPI_VERSION'] = '3.1.3'
+    app.config['OPENAPI_URL_PREFIX'] = '/'
+    app.config['OPENAPI_SWAGGER_UI_PATH'] = '/swagger-ui'
+    app.config['OPENAPI_SWAGGER_UI_URL'] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 
-    migrate.init_app(application, db)
+
+    db.init_app(app)
+    api.init_app(app)
+    migrate.init_app(app, db)
 
     # 블루 프린트 등록
+
+    app.register_blueprint(user_bp)
+
 
     @click.command("init-db")
     @with_appcontext
@@ -39,6 +45,6 @@ def create_app():
         db.create_all()
         click.echo("Initialized the database.")
 
-    application.cli.add_command(init_db_command)
+    app.cli.add_command(init_db_command)
 
-    return application
+    return app

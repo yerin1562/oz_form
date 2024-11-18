@@ -35,8 +35,9 @@
                 </select>
             </div>
             <div class="mb-3">
-                <label for="email" class="form-label">이메일</label>
-                <input type="email" class="form-control" id="email" required>
+                <!-- 이메일을 mbti 로 변경 -->
+                <label for="MBTI" class="form-label">MBTI </label>
+                <input type="mbti" class="form-control" id="mbti" required>
             </div>
             <button type="submit" class="btn btn-primary btn-lg w-100">시작하기</button>
         </form>
@@ -54,7 +55,7 @@
                     name: document.getElementById('name').value,
                     age: document.getElementById('age').value,
                     gender: document.getElementById('gender').value,
-                    email: document.getElementById('email').value
+                    mbti: document.getElementById('mbti').value
                 })
             });
             const data = await response.json();
