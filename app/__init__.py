@@ -32,8 +32,8 @@ def create_app():
     migrate.init_app(application, db)
 
     # 블루 프린트 등록
-    from app.routes import options
-    application.register_blueprint(options.bp)
+    from app.routes import detail_questions
+    application.register_blueprint(detail_questions.bp)
 
     @click.command("init-db")
     @with_appcontext
