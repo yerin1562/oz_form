@@ -47,6 +47,7 @@ def create_app():
     app.register_blueprint(answer_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(detail_questions_bp)
+    app.register_blueprint(index_bp)
 
 
     @click.command("init-db")

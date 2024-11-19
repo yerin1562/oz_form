@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session 
-from flask.views import MethodView
 from app.models import Image, Answer, Question, ImageStatus
 from config import db
 
@@ -7,14 +6,14 @@ from config import db
 index_bp = Blueprint('index', __name__)
 
 # Index 페이지
-@index_bp.route('/', methods=['GET'])
+@index_bp.route('/index')
 def index():
-    """
-    메인 페이지를 렌더링
-    - main 타입의 이미지를 데이터베이스에서 가져옴
-    """
-    main_image = Image.query.filter_by(id=5).first()
-    return render_template('index.html', main_image=main_image)
+    # id가 5인 이미지를 가져옵니다.
+     image = Image.query.filter_by(id=5).first()
 
+     # 이미지가 있으면 URL을 전달, 없으면 None을 전달
+     image_url = image.url if image else None
+    
+     return render_template('index.html',image_url=image_url)
 
 
