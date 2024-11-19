@@ -20,10 +20,7 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
-    app = Flask(__name__)
 
-    app.config.from_object("config.Config")
-    app.secret_key = "oz_form_secret"
     app.config.from_object("config.Config")
     app.secret_key = "oz_form_secret"
 

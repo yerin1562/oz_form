@@ -18,7 +18,11 @@ def signup():
         db.session.commit()
 
         # 성공 메시지와 함께 페이지를 새로고침
-        return jsonify("User created successfully!"), 201
+        # return jsonify("User created successfully!"), 201
+        return jsonify({
+            "message": "User created successfully!",
+            "user_id": new_user.id
+        }), 201 # ===> 수정됨(효)
 
     else: 
         return render_template("signup.html")
