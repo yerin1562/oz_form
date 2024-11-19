@@ -27,7 +27,6 @@
             <input type="hidden" name="user_id" value="{{ request.args.get('user_id') }}">
             
             <!-- 선택지들 -->
-           
             {% for choice in choices %}
                 <div id="choice_{{ choice.id }}" class="choice-block" onclick="selectChoice({{ choice.id }})">
                     {{ choice.content }}

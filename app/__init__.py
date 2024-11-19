@@ -9,7 +9,9 @@ from flask_migrate import Migrate
 from app.views.question import question_bp
 from app.views.answer import answer_bp
 from app.views.users import user_bp
+from app.views.detail_questions import detail_questions_bp 
 from app.routes import index_bp
+
 
 import app.models
 
@@ -18,11 +20,15 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
+    app = Flask(__name__)
 
     app.config.from_object("config.Config")
     app.secret_key = "oz_form_secret"
+    app.config.from_object("config.Config")
+    app.secret_key = "oz_form_secret"
 
-    # app.config 
+        # app.config 
+
     app.config['API_TITLE'] = 'oz_form'
     app.config['API_VERSION'] = '1.0'
     app.config['OPENAPI_VERSION'] = '3.1.3'
@@ -35,10 +41,13 @@ def create_app():
 
     migrate.init_app(app, db)
 
+
     # question 블루 프린트 등록
     app.register_blueprint(question_bp)
     app.register_blueprint(answer_bp)
     app.register_blueprint(user_bp)
+    app.register_blueprint(detail_questions_bp)
+
 
     @click.command("init-db")
     @with_appcontext
