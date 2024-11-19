@@ -6,7 +6,7 @@ from config import db
 index_bp = Blueprint('index', __name__)
 
 # Index 페이지
-@index_bp.route('/index')
+@index_bp.route('/')
 def index():
     # id가 5인 이미지를 가져옵니다.
     image = Image.query.filter_by(id=5).first()
