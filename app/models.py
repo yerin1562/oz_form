@@ -40,7 +40,11 @@ class User(db.Model):
             "gender": (
                 self.gender.value if hasattr(self.gender, "value") else self.gender
             ),
+<<<<<<< HEAD
             "mbti": self.mbti
+=======
+            "mbti": self.mbti ,
+>>>>>>> origin/feature/answers
         }
 
 

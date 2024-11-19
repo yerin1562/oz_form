@@ -6,7 +6,7 @@ from config import api, db
 from flask import Flask
 from flask.cli import with_appcontext
 from flask_migrate import Migrate
-from app.routes import user_bp
+from app.routes import user_bp, answer_bp
 
 import app.models
 
@@ -20,8 +20,8 @@ def create_app():
     app.secret_key = "oz_form_secret"
 
         # app.config 
-    app.config['WTF_CSRF_ENABLED'] = False
 
+    app.config['WTF_CSRF_ENABLED'] = False
     app.config['API_TITLE'] = 'oz_form'
     app.config['API_VERSION'] = '1.0'
     app.config['OPENAPI_VERSION'] = '3.1.3'
@@ -34,7 +34,10 @@ def create_app():
     api.init_app(app)
     migrate.init_app(app, db)
 
+    
+    
     # 블루 프린트 등록
+    app.register_blueprint(answer_bp, url_prefix='/quiz')
 
     app.register_blueprint(user_bp)
 
