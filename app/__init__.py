@@ -6,10 +6,14 @@ from config import api, db
 from flask import Flask
 from flask.cli import with_appcontext
 from flask_migrate import Migrate
-from app.routes_.question import question_bp
-from app.routes_.answer import answer_bp
 from app.routes_.users import user_bp
+<<<<<<< HEAD
 from app.routes_.detail_questions import detail_questions_bp 
+=======
+from app.routes_.answer import answer_bp
+from app.routes_.detail_questions import detail_questions_bp
+from app.routes_.question import question_bp
+>>>>>>> e3a1eec (변경사항저장)
 from app.routes_.index import index_bp
 
 
@@ -23,27 +27,29 @@ def create_app():
 
     app.config.from_object("config.Config")
     app.secret_key = "oz_form_secret"
+    
 
         # app.config 
+    app.config['WTF_CSRF_ENABLED'] = False
 
     app.config['API_TITLE'] = 'oz_form'
     app.config['API_VERSION'] = '1.0'
     app.config['OPENAPI_VERSION'] = '3.1.3'
     app.config['OPENAPI_URL_PREFIX'] = '/'
     app.config['OPENAPI_SWAGGER_UI_PATH'] = '/swagger-ui'
-    app.config['OPENAPI_SWQGGER_UI_URL'] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
+    app.config['OPENAPI_SWAGGER_UI_URL'] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
+
 
     db.init_app(app)
     api.init_app(app)
 
     migrate.init_app(app, db)
 
-
     # question 블루 프린트 등록
     app.register_blueprint(question_bp)
-    app.register_blueprint(answer_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(detail_questions_bp)
+    app.register_blueprint(answer_bp)
     app.register_blueprint(index_bp)
 
 
