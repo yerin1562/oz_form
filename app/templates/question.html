@@ -17,12 +17,13 @@
         .choice-block:hover { background-color: #e9ecef; }
         .choice-block.selected { background-color: #007bff; color: white; }
         .choice-block.selected:hover { background-color: #0056b3; }
+
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container text-center">
         <h2 class="my-4">{{ question.title }}</h2>
-        <img src="{{ question.image.url }}" alt="Sub Image" class="img-fluid mb-4">
+        <img src="{{ question.image.url }}" alt="Sub Image" style="width: 50%; height: auto;" class="img-fluid mb-4">
         
         <!-- 
         <form action="" method="post"> 
