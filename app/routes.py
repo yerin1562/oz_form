@@ -6,14 +6,14 @@ from config import db
 index_bp = Blueprint('index', __name__)
 
 # Index 페이지
-@index_bp.route('/index')
+@index_bp.route('/')
 def index():
     # id가 5인 이미지를 가져옵니다.
-     image = Image.query.filter_by(id=5).first()
+    image = Image.query.filter_by(id=5).first()
 
-     # 이미지가 있으면 URL을 전달, 없으면 None을 전달
-     image_url = image.url if image else None
+    # 이미지가 있으면 URL을 전달, 없으면 None을 전달
+    image_url = image.url if image else None
     
-     return render_template('index.html',image_url=image_url)
+    return render_template('index.html',image_url=image_url)
 
 
