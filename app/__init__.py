@@ -6,11 +6,11 @@ from config import api, db
 from flask import Flask
 from flask.cli import with_appcontext
 from flask_migrate import Migrate
-from app.views.question import question_bp
-from app.views.answer import answer_bp
-from app.views.users import user_bp
-from app.views.detail_questions import detail_questions_bp 
-from app.routes import index_bp
+from app.routes_.question import question_bp
+from app.routes_.answer import answer_bp
+from app.routes_.users import user_bp
+from app.routes_.detail_questions import detail_questions_bp 
+from app.routes_ import index_bp
 
 
 import app.models
