@@ -1,4 +1,4 @@
-# 테이블 및 구조 설정 !
+# 테이블 및 구조 설정 
 
 from datetime import datetime, timezone
 from enum import Enum
@@ -31,6 +31,7 @@ class User(db.Model):
     age = db.Column(db.Enum(AgeStatus), nullable=False)
     gender = db.Column(db.Enum(GenderStatus), nullable=False)
     mbti = db.Column(db.String(4), nullable=False)
+    mbti = db.Column(db.String(4), nullable=False)
 
     def to_dict(self):
         return {
@@ -40,7 +41,7 @@ class User(db.Model):
             "gender": (
                 self.gender.value if hasattr(self.gender, "value") else self.gender
             ),
-            "mbti": self.mbti,
+            "mbti": self.mbti
         }
 
 
