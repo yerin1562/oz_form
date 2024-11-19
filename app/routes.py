@@ -4,7 +4,7 @@ from models import Image, Answer, Question, ImageStatus
 from config import db
 
 # 블루프린트 정의
-answer_bp = Blueprint('quiz', __name__)
+index_bp = Blueprint('index', __name__)
 
 # Index 페이지
 @answer_bp.route('/', methods=['GET'])
