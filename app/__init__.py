@@ -10,7 +10,7 @@ from app.routes_.question import question_bp
 from app.routes_.answer import answer_bp
 from app.routes_.users import user_bp
 from app.routes_.detail_questions import detail_questions_bp 
-from app.routes import index_bp
+from app.routes_.index import index_bp
 
 
 import app.models
