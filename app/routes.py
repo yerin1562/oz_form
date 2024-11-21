@@ -8,7 +8,11 @@ bp = Blueprint('bp', __name__)
 @bp.route('/')
 def index():
     image = Image.query.filter_by(id=5).first()
-    return render_template('index.html', image=image)
+
+    # 이미지가 있으면 URL을 전달, 없으면 None을 전달
+    image_url = image.url if image else None
+    
+    return render_template('index.html',image_url=image_url)
 
 # 회원가입 후 question 페이지로 이동
 @bp.route('/signup', methods=['GET', 'POST'])
