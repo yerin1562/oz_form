@@ -9,7 +9,11 @@ api = Api()
 # URI 설정 맞추기 
 
 class Config:
+<<<<<<< HEAD
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:0000@localhost/oz_form"
+=======
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:0000@localhost/oz_form2"
+>>>>>>> origin/manggom
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_POOL_SIZE = 10
     SQLALCHEMY_POOL_TIMEOUT = 5

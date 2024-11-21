@@ -6,9 +6,13 @@ from config import api, db
 from flask import Flask
 from flask.cli import with_appcontext
 from flask_migrate import Migrate
+<<<<<<< HEAD
 
 
 
+=======
+from app.routes import bp as main_bp  # 블루프린트 임포트
+>>>>>>> origin/manggom
 import app.models
 
 migrate = Migrate()
@@ -32,6 +36,7 @@ def create_app():
     app.config['OPENAPI_SWAGGER_UI_URL'] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 
 
+<<<<<<< HEAD
     db.init_app(app)
     api.init_app(app)
 
@@ -40,6 +45,10 @@ def create_app():
     # question 블루 프린트 등록
     
 
+=======
+    # 블루 프린트 등록
+    application.register_blueprint(main_bp)
+>>>>>>> origin/manggom
 
     @click.command("init-db")
     @with_appcontext

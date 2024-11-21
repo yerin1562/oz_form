@@ -30,8 +30,12 @@ class User(db.Model):
     name = db.Column(db.String(10), nullable=False)
     age = db.Column(db.Enum(AgeStatus), nullable=False)
     gender = db.Column(db.Enum(GenderStatus), nullable=False)
+<<<<<<< HEAD
     mbti = db.Column(db.String(4), nullable=False)
     
+=======
+    mbti = db.Column(db.String(120), unique=True, nullable=False)
+>>>>>>> origin/manggom
 
     def to_dict(self):
         return {
@@ -41,7 +45,11 @@ class User(db.Model):
             "gender": (
                 self.gender.value if hasattr(self.gender, "value") else self.gender
             ),
+<<<<<<< HEAD
             "mbti": self.mbti
+=======
+            "mbti": self.mbti,
+>>>>>>> origin/manggom
         }
 
 
