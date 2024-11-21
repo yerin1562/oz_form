@@ -31,7 +31,7 @@ class User(db.Model):
     age = db.Column(db.Enum(AgeStatus), nullable=False)
     gender = db.Column(db.Enum(GenderStatus), nullable=False)
     mbti = db.Column(db.String(4), nullable=False)
-    mbti = db.Column(db.String(4), nullable=False)
+    
 
     def to_dict(self):
         return {

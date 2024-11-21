@@ -17,40 +17,20 @@
         .choice-block:hover { background-color: #e9ecef; }
         .choice-block.selected { background-color: #007bff; color: white; }
         .choice-block.selected:hover { background-color: #0056b3; }
-
     </style>
 </head>
 <body>
-    <div class="container text-center">
+    <div class="container">
         <h2 class="my-4">{{ question.title }}</h2>
-        <img src="{{ question.image.url }}" alt="Sub Image" style="width: 50%; height: auto;" class="img-fluid mb-4">
-        
-        <!-- 
-        <form action="" method="post"> 
-        ==> 원본(효) -->        
-        <!-- 아래 <from...> 추가됨 (효) -->
-        <form action="/question/{{ question.next_id }}?user_id={{ request.args.get('user_id') }}" method="post"></form>         
+        <img src="{{ question.image.url }}" alt="Sub Image" class="img-fluid mb-4">
+        <form action="" method="post">
             <input type="hidden" name="user_id" value="{{ request.args.get('user_id') }}">
-            
             <!-- 선택지들 -->
-            <!-- {% for choice in choices %}
+            {% for choice in choices %}
                 <div id="choice_{{ choice.id }}" class="choice-block" onclick="selectChoice({{ choice.id }})">
                     {{ choice.content }}
                 </div>
-            {% endfor %} -->
-
-            <!-- 아래와 같이 수정됨 (효) -->
-            {% if detail_questions %}
-                {% for dq in detail_questions %}
-                    <div class="choice-block" onclick="selectChoice({{ dq.id }})">
-                        {{ dq.content }}
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p>여기에 질문이 없습니다.</p>
-            {% endif %}
-
-
+            {% endfor %}
             <input type="hidden" name="answer" id="selected_answer" value=""> <!-- 선택된 값이 저장될 input -->
             <button type="submit" class="btn btn-primary btn-lg mt-3" {% if not selected_choice %}disabled{% endif %}>
                 {% if question.sqe == 4 %}제출하기{% else %}다음{% endif %}

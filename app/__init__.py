@@ -6,15 +6,7 @@ from config import api, db
 from flask import Flask
 from flask.cli import with_appcontext
 from flask_migrate import Migrate
-from app.routes_.users import user_bp
-<<<<<<< HEAD
-from app.routes_.detail_questions import detail_questions_bp 
-=======
-from app.routes_.answer import answer_bp
-from app.routes_.detail_questions import detail_questions_bp
-from app.routes_.question import question_bp
->>>>>>> e3a1eec (변경사항저장)
-from app.routes_.index import index_bp
+
 
 
 import app.models
@@ -46,11 +38,7 @@ def create_app():
     migrate.init_app(app, db)
 
     # question 블루 프린트 등록
-    app.register_blueprint(question_bp)
-    app.register_blueprint(user_bp)
-    app.register_blueprint(detail_questions_bp)
-    app.register_blueprint(answer_bp)
-    app.register_blueprint(index_bp)
+    
 
 
     @click.command("init-db")
