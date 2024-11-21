@@ -1,88 +1,112 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
-from app import db
+from flask import Blueprint, render_template, request, redirect, jsonify, url_for
+from config import db
 from app.models import User, Question, Detail_questions, Answer, Image
-import plotly.express as px
-import plotly.io as pio
 
-bp = Blueprint('bp', __name__)
+bp = Blueprint('main', __name__)
 
-# 인덱스 페이지에서 이미지 id=5 출력
+# 첫 번째 페이지: 설문조사 시작 페이지
 @bp.route('/')
 def index():
-    image = Image.query.filter_by(id=5).first()
-    # 이미지가 있으면 URL을 전달, 없으면 None을 전달
-    image_url = image.url if image else None
-    
-    return render_template('index.html',image_url=image_url)
+    main_image = Image.query.filter_by(type='main').first()
+    return render_template('index.html', image_url=main_image.url if main_image else None)
 
-
-# 회원가입 페이지 (signup.html)
 @bp.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        data = request.get_json()
+        data = request.json
 
-        # 사용자 정보를 받아서 데이터베이스에 저장
+        # 새로운 사용자 항상 생성
         user = User(
             name=data['name'],
             age=data['age'],
             gender=data['gender'],
             mbti=data['mbti']
         )
-
         db.session.add(user)
         db.session.commit()
 
-        # 성공적으로 가입한 후 user_id를 반환
-        return redirect(f'/question/1?user_id={user.id}')
-    
-    # GET 요청일 경우 signup.html 렌더링
-    return render_template('signup.html')
+        message = "회원가입 완료! 설문을 시작합니다."
+
+        return jsonify({'message': message, 'user_id': user.id})
+    else:
+        return render_template('signup.html')
 
 
-# 질문 페이지 (question.html) - 질문 1부터 4까지 처리
+
+# 세 번째부터 여섯 번째까지의 설문 페이지
 @bp.route('/question/<int:question_id>', methods=['GET', 'POST'])
 def question(question_id):
-    user_id = request.args.get('user_id')  # URL에서 user_id 받기
-    question = Question.query.get(question_id)  # 현재 질문
-    image = Image.query.filter_by(id=question.image_id).first()  # 해당 질문에 맞는 이미지
+    question = Question.query.get_or_404(question_id)
+    choices = Detail_questions.query.filter_by(question_id=question_id).all()
 
-    # POST 요청일 경우 답변을 저장
     if request.method == 'POST':
-        # 답변 처리
-        detail_question_ids = request.form.getlist('detail_question_id')
-        for detail_question_id in detail_question_ids:
-            answer = Answer(user_id=user_id, detail_question_id=detail_question_id)
+        user_id = request.form.get('user_id')
+        selected_answer = request.form.get('answer')
+
+        if user_id and selected_answer:
+            answer = Answer(user_id=user_id, detail_question_id=selected_answer)
             db.session.add(answer)
-        db.session.commit()
+            db.session.commit()
 
-        # 마지막 질문이면 결과 페이지로 이동
-        if question_id == 4:
-            return redirect(url_for('bp.results', user_id=user_id))
-        # 아니면 다음 질문으로 이동
-        return redirect(url_for('bp.question', question_id=question_id + 1, user_id=user_id))
+            # 다음 질문으로 이동 또는 결과 페이지로 리다이렉트
+            next_question = Question.query.filter(Question.sqe > question.sqe).order_by(Question.sqe).first()
+            if next_question:
+                return redirect(url_for('main.question', question_id=next_question.id, user_id=user_id))
+            else:
+                return redirect(url_for('main.results', user_id=user_id))
 
-    # 해당 질문에 대한 detail_questions 가져오기
-    detail_questions = Detail_questions.query.filter_by(question_id=question.id).all()
+    else:
+        return render_template('question.html', question=question, choices=choices)
 
-    return render_template('question.html', question=question, image=image, detail_questions=detail_questions, user_id=user_id)
-
-# 결과 페이지 (result.html) - 답변 통계를 Plotly로 출력
-@bp.route('/results/<int:user_id>', methods=['GET'])
+# 마지막 페이지: 통계 페이지
+@bp.route('/results/<int:user_id>')
 def results(user_id):
-    # 사용자에 해당하는 답변 가져오기
-    answers = Answer.query.filter_by(user_id=user_id).all()
+    # 통계 계산 예시: T와 F 비율
+    total_users = User.query.count()
+    t_users = User.query.filter(User.mbti.like('%T%')).count()
+    f_users = User.query.filter(User.mbti.like('%F%')).count()
 
-    # 답변 통계를 분석하기 위한 데이터 준비
-    answer_data = {}
-    for answer in answers:
-        detail_question = Detail_questions.query.get(answer.detail_question_id)
-        if detail_question.id not in answer_data:
-            answer_data[detail_question.id] = 0
-        answer_data[detail_question.id] += 1
+    question_charts = []
+    for i in range(4):  # 4개의 질문에 대한 데이터
+        question = Question.query.filter_by(sqe=i + 1).first()
+        if question:
+            choices = Detail_questions.query.filter_by(question_id=question.id).all()
+            chart_data = {
+                "labels": [choice.content for choice in choices],
+                "values": [
+                    Answer.query.filter_by(detail_question_id=choice.id).count()
+                    for choice in choices
+                ],
+                "type": "pie",
+                "name": f"Question {i + 1}"
+            }
+            question_charts.append(chart_data)
 
-    # Plotly 그래프 준비
-    fig = px.bar(x=list(answer_data.keys()), y=list(answer_data.values()), labels={'x': 'Detail Question ID', 'y': 'Answer Count'})
-    graph_html = pio.to_html(fig, full_html=False)
+    return render_template(
+        'results.html',
+        t_percentage=round((t_users / total_users) * 100, 2) if total_users else 0,
+        f_percentage=round((f_users / total_users) * 100, 2) if total_users else 0,
+        question_charts=question_charts
+    )
 
-    return render_template('results.html', graph_html=graph_html)
+# # 통계 데이터 API
+# @bp.route('/results/stats')
+# def results_stats():
+#     total_users = User.query.count()
+#     t_users = User.query.filter(User.mbti.like('%T%')).count()
+#     f_users = User.query.filter(User.mbti.like('%F%')).count()
+
+#     same_result_chart = {
+#         "labels": ["T", "F"],
+#         "values": [t_users, f_users],
+#         "type": "pie"
+#     }
+
+#     # 추가 통계 차트 데이터 구성
+#     return jsonify({
+#         "same_result_chart": same_result_chart,
+#         "age_chart": {},  # 연령별 통계 데이터 구성
+#         "gender_chart": {},  # 성별 통계 데이터 구성
+#         "age_distribution_chart": {},  # 연령대 통계 데이터 구성
+#         "question_charts": []  # 질문별 통계 데이터 구성
+#     })
