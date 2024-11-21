@@ -6,11 +6,7 @@ from config import api, db
 from flask import Flask
 from flask.cli import with_appcontext
 from flask_migrate import Migrate
-from app.routes_.question import question_bp
-from app.routes_.answer import answer_bp
-from app.routes_.users import user_bp
-from app.routes_.detail_questions import detail_questions_bp 
-from app.routes_ import index_bp
+from app.routes import bp
 
 
 import app.models
@@ -20,12 +16,10 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
-    app = Flask(__name__)
 
     app.config.from_object("config.Config")
     app.secret_key = "oz_form_secret"
-    app.config.from_object("config.Config")
-    app.secret_key = "oz_form_secret"
+
 
         # app.config 
 
@@ -43,11 +37,7 @@ def create_app():
 
 
     # question 블루 프린트 등록
-    app.register_blueprint(question_bp)
-    app.register_blueprint(answer_bp)
-    app.register_blueprint(user_bp)
-    app.register_blueprint(detail_questions_bp)
-    app.register_blueprint(index_bp)
+    app.register_blueprint(bp)
 
 
     @click.command("init-db")
