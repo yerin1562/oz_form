@@ -17,22 +17,22 @@ def create_app():
 
     app.config.from_object("config.Config")
     app.secret_key = "oz_form_secret"
-
+    
 
         # app.config 
+    app.config['WTF_CSRF_ENABLED'] = False
 
     app.config['API_TITLE'] = 'oz_form'
     app.config['API_VERSION'] = '1.0'
     app.config['OPENAPI_VERSION'] = '3.1.3'
     app.config['OPENAPI_URL_PREFIX'] = '/'
     app.config['OPENAPI_SWAGGER_UI_PATH'] = '/swagger-ui'
-    app.config['OPENAPI_SWQGGER_UI_URL'] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
+    app.config['OPENAPI_SWAGGER_UI_URL'] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 
     db.init_app(app)
     api.init_app(app)
 
     migrate.init_app(app, db)
-
 
 
     # 블루 프린트 등록

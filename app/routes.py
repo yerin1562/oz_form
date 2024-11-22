@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, jsonify, url_for
 from config import db
 from app.models import User, Question, Detail_questions, Answer, Image
+import plotly.express as px
+
 
 bp = Blueprint('main', __name__)
 
@@ -58,55 +60,55 @@ def question(question_id):
     else:
         return render_template('question.html', question=question, choices=choices)
 
-# 마지막 페이지: 통계 페이지
+
+
+# 결과 통계 페이지
 @bp.route('/results/<int:user_id>')
 def results(user_id):
-    # 통계 계산 예시: T와 F 비율
-    total_users = User.query.count()
+    # 사용자 데이터를 불러오는 예시 (예를 들어 사용자가 설문조사에 응답한 결과)
+    user = User.query.get(user_id)
+    # 예시 데이터는 실제 모델에 맞게 변경 필요
+    results = {"MBTI": user.mbti, "age": user.age, "gender": user.gender}
+    
+    # Plotly 그래프 예시: MBTI F/T 비율
     t_users = User.query.filter(User.mbti.like('%T%')).count()
     f_users = User.query.filter(User.mbti.like('%F%')).count()
+    mbti_data = {
+        "labels": ["T", "F"],
+        "values": [t_users, f_users],
+        "type": "pie"
+    }
+    mbti_chart = px.pie(names=mbti_data["labels"], values=mbti_data["values"])
 
-    question_charts = []
-    for i in range(4):  # 4개의 질문에 대한 데이터
-        question = Question.query.filter_by(sqe=i + 1).first()
-        if question:
-            choices = Detail_questions.query.filter_by(question_id=question.id).all()
-            chart_data = {
-                "labels": [choice.content for choice in choices],
-                "values": [
-                    Answer.query.filter_by(detail_question_id=choice.id).count()
-                    for choice in choices
-                ],
-                "type": "pie",
-                "name": f"Question {i + 1}"
-            }
-            question_charts.append(chart_data)
+    # 나이별 선택자 비율
+    age_groups = {
+        "teen": User.query.filter(User.age == 'teen').count(),
+        "twenty": User.query.filter(User.age == 'twenty').count(),
+        "thirty": User.query.filter(User.age == 'thirty').count(),
+        "fourty": User.query.filter(User.age == 'fourty').count(),
+        "fifty": User.query.filter(User.age == 'fifty').count()
+    }
+    age_chart = px.bar(x=list(age_groups.keys()), y=list(age_groups.values()), title="Age Distribution")
 
-    return render_template(
-        'results.html',
-        t_percentage=round((t_users / total_users) * 100, 2) if total_users else 0,
-        f_percentage=round((f_users / total_users) * 100, 2) if total_users else 0,
-        question_charts=question_charts
-    )
+    # 성별별 선택자 비율
+    gender_groups = {
+        "male": User.query.filter(User.gender == 'male').count(),
+        "female": User.query.filter(User.gender == 'female').count()
+    }
+    gender_chart = px.bar(x=list(gender_groups.keys()), y=list(gender_groups.values()), title="Gender Distribution")
 
-# # 통계 데이터 API
-# @bp.route('/results/stats')
-# def results_stats():
-#     total_users = User.query.count()
-#     t_users = User.query.filter(User.mbti.like('%T%')).count()
-#     f_users = User.query.filter(User.mbti.like('%F%')).count()
+    # 모든 MBTI 비율
+    mbti_count = {}
+    for mbti_type in ['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTH','ISFJ','ESTJ','ESFJ','ISTP','ISFP','ESTP','ESFP']:  # 여기에 실제 MBTI 타입을 다 넣으세요.
+        mbti_count[mbti_type] = User.query.filter(User.mbti == mbti_type).count()
+    mbti_dist_chart = px.bar(x=list(mbti_count.keys()), y=list(mbti_count.values()), title="MBTI Distribution")
 
-#     same_result_chart = {
-#         "labels": ["T", "F"],
-#         "values": [t_users, f_users],
-#         "type": "pie"
-#     }
+    # 결과 페이지에서 차트 표시
+    return render_template('results.html', 
+                        user_results=results,
+                        mbti_chart=mbti_chart.to_html(full_html=False),
+                        age_chart=age_chart.to_html(full_html=False),
+                        gender_chart=gender_chart.to_html(full_html=False),
+                        mbti_dist_chart=mbti_dist_chart.to_html(full_html=False))
 
-#     # 추가 통계 차트 데이터 구성
-#     return jsonify({
-#         "same_result_chart": same_result_chart,
-#         "age_chart": {},  # 연령별 통계 데이터 구성
-#         "gender_chart": {},  # 성별 통계 데이터 구성
-#         "age_distribution_chart": {},  # 연령대 통계 데이터 구성
-#         "question_charts": []  # 질문별 통계 데이터 구성
-#     })
+
