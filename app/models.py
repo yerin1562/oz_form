@@ -1,4 +1,4 @@
-# 테이블 및 구조 설정 !
+# 테이블 및 구조 설정 
 
 from datetime import datetime, timezone
 from enum import Enum
