@@ -70,6 +70,9 @@ def results(user_id):
     # 예시 데이터는 실제 모델에 맞게 변경 필요
     results = {"MBTI": user.mbti, "age": user.age, "gender": user.gender}
     
+    # 색상 배열
+    custom_colors = ['#FFE6E6', '#E1AFD1', '#AD88C6', '#7469B6']
+    
     # Plotly 그래프 예시: MBTI F/T 비율
     t_users = User.query.filter(User.mbti.like('%T%')).count()
     f_users = User.query.filter(User.mbti.like('%F%')).count()
@@ -79,6 +82,8 @@ def results(user_id):
         "type": "pie"
     }
     mbti_chart = px.pie(names=mbti_data["labels"], values=mbti_data["values"])
+    mbti_chart.update_traces(marker=dict(colors=custom_colors[:2]))  # 첫 두 색상을 사용하여 MBTI F/T 비율 차트의 색상 설정
+
 
     # 나이별 선택자 비율
     age_groups = {
@@ -89,6 +94,7 @@ def results(user_id):
         "fifty": User.query.filter(User.age == 'fifty').count()
     }
     age_chart = px.bar(x=list(age_groups.keys()), y=list(age_groups.values()), title="Age Distribution")
+    age_chart.update_traces(marker=dict(color=custom_colors[2]))  # 세 번째 색상 적용
 
     # 성별별 선택자 비율
     gender_groups = {
@@ -96,12 +102,14 @@ def results(user_id):
         "female": User.query.filter(User.gender == 'female').count()
     }
     gender_chart = px.bar(x=list(gender_groups.keys()), y=list(gender_groups.values()), title="Gender Distribution")
+    gender_chart.update_traces(marker=dict(color=custom_colors[3]))  # 네 번째 색상 적용
 
     # 모든 MBTI 비율
     mbti_count = {}
     for mbti_type in ['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTH','ISFJ','ESTJ','ESFJ','ISTP','ISFP','ESTP','ESFP']:  # 여기에 실제 MBTI 타입을 다 넣으세요.
         mbti_count[mbti_type] = User.query.filter(User.mbti == mbti_type).count()
     mbti_dist_chart = px.bar(x=list(mbti_count.keys()), y=list(mbti_count.values()), title="MBTI Distribution")
+    mbti_dist_chart.update_traces(marker=dict(color=custom_colors[1]))  # 전체 색상 배열을 MBTI 비율 차트에 적용
 
     # 결과 페이지에서 차트 표시
     return render_template('results.html', 

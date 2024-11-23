@@ -7,19 +7,23 @@
     <style>
         body { font-family: Arial, sans-serif; }
         header, section { margin: 20px 0; }
-        .container { max-width: 600px; }
-        img { width: 100%; height: auto; }
+        .container {
+                    max-width: 800px;
+                    padding: 50px;  /* 내부 여백 (컨텐츠와 테두리 사이 공간) */
+                    margin: 0 auto;  /* 자동으로 좌우 여백 설정 (가운데 정렬) */
+                }
+        img { width: 60%; height: auto; padding: 30px;}
         button { width: 100%; }
     </style>
 </head>
 <body>
     <div class="container text-center">
         <header>
-            <h1 class="display-4 mb-4">나 우울해서 빵 사 먹었어ㅠㅜ</h1>
+            <h1 class="display-4 mb-4 fw-bold">나 우울해서 빵 사 먹었어😢</h1>
         </header>
         <section>
             <img src="{{ image_url }}" alt="Main Image" class="img-fluid mb-4">
-            <button class="btn btn-primary btn-lg" onclick="location.href='/signup'">회원가입 시작하기</button>
+            <button class="btn btn-primary btn-lg" onclick="location.href='/signup'">당신의 대답은?</button>
         </section>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
