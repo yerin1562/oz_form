@@ -4,31 +4,45 @@
     <meta charset="UTF-8">
     <title>결과 페이지</title>
     <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist@2.17.1/plotly.min.js"></script>
+    <style>
+        .chart-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
     <h1>설문 결과</h1>
 
-
-    <div>
+    <div class="chart-container">
         <h2>MBTI F/T 비율</h2>
         {{ mbti_chart|safe }}
     </div>
 
-    <div>
+    <div class="chart-container">
         <h2>나이별 분포</h2>
         {{ age_chart|safe }}
     </div>
 
-    <div>
+    <div class="chart-container">
         <h2>성별 분포</h2>
         {{ gender_chart|safe }}
     </div>
 
-    <div>
+    <div class="chart-container">
         <h2>전체 MBTI 비율</h2>
         {{ mbti_dist_chart|safe }}
     </div>
 
+    <div class="chart-container">
+        <h2>문항별 답변 비율</h2>
+        {% for chart in question_charts %}
+            <div class="question-chart">
+                {{ chart|safe }}
+            </div>
+        {% endfor %}
+    </div>
 </body>
 </html>
-
