@@ -1,4 +1,4 @@
-# 테이블 및 구조 설정 !
+# 테이블 및 구조 설정 
 
 from datetime import datetime, timezone
 from enum import Enum
@@ -30,7 +30,7 @@ class User(db.Model):
     name = db.Column(db.String(10), nullable=False)
     age = db.Column(db.Enum(AgeStatus), nullable=False)
     gender = db.Column(db.Enum(GenderStatus), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    mbti = db.Column(db.String(4), nullable=False)
 
     def to_dict(self):
         return {
@@ -40,7 +40,7 @@ class User(db.Model):
             "gender": (
                 self.gender.value if hasattr(self.gender, "value") else self.gender
             ),
-            "email": self.email,
+            "mbti": self.mbti
         }
 
 
@@ -68,7 +68,6 @@ class Question(db.Model):
     sqe = db.Column(db.Integer, nullable=False)
 
     image_id = db.Column(db.Integer, db.ForeignKey("images.id"), nullable=False)
-
     image = db.relationship("Image", back_populates="questions")
 
     def to_dict(self):
@@ -81,7 +80,7 @@ class Question(db.Model):
         }
 
 
-class DetailQuestion(db.Model):
+class Detail_questions(db.Model):
     __tablename__ = "detail_questions"
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
