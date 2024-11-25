@@ -66,28 +66,39 @@
     </style>
 </head>
 <body>
-    <h1>설문 결과</h1>
+    <h1 style="font-weight: bold;">설문 결과</h1>
 
 
     <div>
-        <h2>MBTI F/T 비율</h2>
+        <h2 style="color: black;" >MBTI F/T 비율</h2>
         {{ mbti_chart|safe }}
     </div>
 
+    <div class="chart-container"></div>
+        <h2 style="color: black;">문항별 답변 비율</h2>
+        {% for chart in question_charts %}
+            <div class="question-chart">
+                {{ chart|safe }}
+            </div>
+        {% endfor %}
+    </div>
+
     <div>
-        <h2>나이별 분포</h2>
+        <h2 style="color: black;">나이별 분포</h2>
         {{ age_chart|safe }}
     </div>
 
     <div>
-        <h2>성별 분포</h2>
+        <h2 style="color: black;">성별 분포</h2>
         {{ gender_chart|safe }}
     </div>
 
     <div>
-        <h2>전체 MBTI 비율</h2>
+        <h2 style="color: black;">전체 MBTI 비율</h2>
         {{ mbti_dist_chart|safe }}
     </div>
+
+    
 
 </body>
 </html>

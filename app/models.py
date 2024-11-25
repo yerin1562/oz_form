@@ -68,8 +68,7 @@ class Question(db.Model):
     sqe = db.Column(db.Integer, nullable=False)
 
     image_id = db.Column(db.Integer, db.ForeignKey("images.id"), nullable=False)
-
-    # image = db.relationship("Image", back_populates="questions")
+    image = db.relationship("Image", back_populates="questions")
 
     def to_dict(self):
         return {
