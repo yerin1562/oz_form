@@ -120,3 +120,25 @@ def results(user_id):
                         mbti_dist_chart=mbti_dist_chart.to_html(full_html=False))
 
 
+    # 답변 통계 처리 (예: 각 질문에 대한 답변 빈도수 계산)
+    result_data = {}
+    for answer in answers:
+        dq = Detail_questions.query.filter_by(id=answer.detail_question_id).first()
+        if dq.question_id not in result_data:
+            result_data[dq.question_id] = {}
+        result_data[dq.question_id][dq.content] = result_data[dq.question_id].get(dq.content, 0) + 1
+
+    # Plotly 그래프를 위한 데이터 준비
+    import plotly.graph_objects as go
+
+    fig = go.Figure()
+
+    for question_id, answers in result_data.items():
+        for content, count in answers.items():
+            fig.add_trace(go.Bar(
+                x=[content], y=[count],
+                name=f'Question {question_id}: {content}'
+            ))
+
+    graph_html = fig.to_html(full_html=False)
+    return render_template('results.html', graph_html=graph_html)
